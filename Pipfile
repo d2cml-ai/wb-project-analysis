@@ -9,6 +9,10 @@ numpy = "*"
 pinecone-client = "*"
 langchain = "*"
 openai = "*"
+python-dotenv = "*"
+streamlit = "*"
+tiktoken = "*"
+ipykernel = "*"
 
 [dev-packages]
 
