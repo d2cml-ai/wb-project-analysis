@@ -28,7 +28,22 @@ Question: 5G
 
 Answer: False
 
+Question: 4571
+
+Answer: False
+
 Question: 4358971
 
 Answer: P4358971
+"""
+
+project_question_system_prompt = """
+Answer the user's query specifically using the user-provided information.
+"""
+
+project_question_user_prompt = """
+Query: {query}
+
+Information:
+{context}
 """
