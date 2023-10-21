@@ -1,7 +1,0 @@
-numpy
-pandas
-python-dotenv
-pinecone-client
-langchain
-openai
-tiktoken
