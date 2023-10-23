@@ -1,43 +1,30 @@
-import os
-import pinecone
-import openai
-import Constants
-from prompts import router_prompt
+import re
 
-openai.api_key = Constants.OPENAI_API_KEY
-os.environ["PINECONE_API_KEY"] = Constants.PINECONE_API_KEY
-os.environ["PINECONE_ENVIRONMENT"] = Constants.PINECONE_ENVIRONMENT
+numbersPattern = re.compile(r"\d+")
 
-def constructRouterMessages(userInput):
-        messages = [
-                {"role": "system", "content": router_prompt},
-                {"role": "user", "content": userInput}
-        ]
-        return messages
+def detectQueryType(query):
+        foundNumberStrings = numbersPattern.findall(query)
+        
+        if len(foundNumberStrings) == 0:
+                return False
+        
+        numberStringLengths = [len(number) for number in foundNumberStrings]
 
-def routeQuery(query):
-        messages = constructRouterMessages(query)
-        routerResponse = openai.ChatCompletion.create(
-                model="gpt-4",
-                messages=messages,
-                temperature=0.0
-        )
-        classification = routerResponse["choices"][0]["message"]["content"]
-        return classification
+        try:
+                projectIdIndex = numberStringLengths.index(7)
+        except ValueError:
+                return False
+        
+        projectId = "P" + foundNumberStrings[projectIdIndex]
+        return projectId
 
 # def main():
 #         userInput = ""
-
 #         while userInput != "exit":
 #                 userInput = input("Query: ")
-#                 messages = constructRouterMessages(userInput)
-#                 routerResponse = openai.ChatCompletion.create(
-#                         model="gpt-4",
-#                         messages=messages,
-#                         temperature=0.0
-#                 )
-#                 classification = routerResponse["choices"][0]["message"]["content"]
-#                 print(classification)
+#                 routerResult = routQuery(userInput)
+#                 print(routerResult)
+                
 
 # if __name__ == "__main__":
 #         main()
