@@ -11,7 +11,7 @@ def detectQueryType(query):
         numberStringLengths = [len(number) for number in foundNumberStrings]
 
         try:
-                projectIdIndex = numberStringLengths.index(7)
+                projectIdIndex = numberStringLengths.index(6)
         except ValueError:
                 return False
         

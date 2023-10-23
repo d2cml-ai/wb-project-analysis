@@ -1,23 +1,40 @@
 import openai
 import pinecone
 from prompts import project_question_system_prompt, project_question_user_prompt
+import Constants
+import os
+
+openai.api_key = Constants.OPENAI_API_KEY
+os.environ["PINECONE_API_KEY"] = Constants.PINECONE_API_KEY
+os.environ["PINECONE_ENVIRONMENT"] = Constants.PINECONE_ENVIRONMENT
+# embeddings =  OpenAIEmbeddings()
+index_name = "wb-projects"
+embeddingModel = "text-embedding-ada-002"
+chatModel = "gpt-3.5-turbo-16k"
+pinecone.init()
+pineconeIndex = pinecone.Index(index_name)
+temperature = 0.6
 
 def contextFromProjectIndexEntry(projectIndexEntry):
         context = ""
-        context += f"\n\nProject ID: {projectIndexEntry['id']}\n"
+        context += f"Project ID: {projectIndexEntry['id']}\n"
         context += f"URL of Project PDF: {projectIndexEntry['metadata']['url']}\n"
-        context += projectIndexEntry["metadata"]["text"]
+        context += projectIndexEntry["metadata"]["text"] + "\n\n"
         return context
 
-def projectQueryResponse(query, projectNumber, pineconeIndex):
-        projectIndexEntry = pineconeIndex.query(id=projectNumber)["matches"]
+def projectQueryResponse(query, projectNumber, chatModel):
+        projectIndexEntry = pineconeIndex.query(
+                id=projectNumber, 
+                top_k=1,
+                include_metadata=True
+        )["matches"][0]
         context = contextFromProjectIndexEntry(projectIndexEntry)
         messages = [
                 {"role": "system", "content": project_question_system_prompt},
                 {"role": "user", "content": project_question_user_prompt.format(query=query, context=context)}
         ]
         response = openai.ChatCompletion.create(
-                model="gpt-4",
+                model=chatModel,
                 messages=messages,
                 temperature=0.5
         )
