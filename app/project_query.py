@@ -9,11 +9,27 @@ os.environ["PINECONE_API_KEY"] = Constants.PINECONE_API_KEY
 os.environ["PINECONE_ENVIRONMENT"] = Constants.PINECONE_ENVIRONMENT
 # embeddings =  OpenAIEmbeddings()
 index_name = "wb-projects"
-embeddingModel = "text-embedding-ada-002"
+# embeddingModel = "text-embedding-ada-002"
 chatModel = "gpt-3.5-turbo-16k"
 pinecone.init()
 pineconeIndex = pinecone.Index(index_name)
 temperature = 0.6
+
+def getProjectIndexEntry(projectNumber):
+        if "PAD" in projectNumber or "PP" in projectNumber or "P" not in projectNumber:
+                projectIndexEntry = pineconeIndex.query(
+                        filter={"repnb": projectNumber},
+                        vector=[0.0] * 1536,
+                        top_k=1,
+                        include_metadata=True
+                )
+                return projectIndexEntry["matches"][0]
+        projectIndexEntry = pineconeIndex.query(
+                id=projectNumber,
+                top_k=1,
+                include_metadata=True
+        )
+        return projectIndexEntry["matches"][0]
 
 def contextFromProjectIndexEntry(projectIndexEntry):
         context = ""
@@ -23,11 +39,12 @@ def contextFromProjectIndexEntry(projectIndexEntry):
         return context
 
 def projectQueryResponse(query, projectNumber, chatModel):
-        projectIndexEntry = pineconeIndex.query(
-                id=projectNumber, 
-                top_k=1,
-                include_metadata=True
-        )["matches"][0]
+        projectIndexEntry = getProjectIndexEntry(projectNumber)
+        # projectIndexEntry = pineconeIndex.query(
+        #         id=projectNumber, 
+        #         top_k=1,
+        #         include_metadata=True
+        # )["matches"][0]
         context = contextFromProjectIndexEntry(projectIndexEntry)
         messages = [
                 {"role": "system", "content": project_question_system_prompt},
