@@ -1,6 +1,6 @@
 import re
 
-projectNumberPattern = re.compile(r"\D(P\d{7})\D")
+projectNumberPattern = re.compile(r"\D(P\d{6})\D")
 reportNumberPattern = re.compile(r"\D(PAD\d{4}|PP\d{4})\D")
 specialCasePattern = re.compile(r"\D(\d{5,6})\D")
 specialCases = [
