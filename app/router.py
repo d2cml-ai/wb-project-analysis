@@ -19,7 +19,7 @@ def detectDocumentQuery(query):
         if len(foundReportNumbers) > 0:
                 return foundReportNumbers[0]
         if len(foundSpecialCases) > 0:
-                if foundSpecialCases in specialCases:
+                if foundSpecialCases[0] in specialCases:
                         return foundSpecialCases[0]
         return False
 
