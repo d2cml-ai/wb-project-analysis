@@ -2,7 +2,7 @@ import re
 
 projectNumberPattern = re.compile(r"\D(P\d{7})\D")
 reportNumberPattern = re.compile(r"\D(PAD\d{4}|PP\d{4})\D")
-specialCasePattern = re.compile(r"\D(\d{4,5})\D")
+specialCasePattern = re.compile(r"\D(\d{5,6})\D")
 specialCases = [
         '153807', '150976', '00000', '83270', '90483', '87051',
         '126142', '120729', '126123', '126148', '177898'
