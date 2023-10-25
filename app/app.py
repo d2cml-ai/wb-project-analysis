@@ -1,7 +1,7 @@
 import Constants
 from project_query import projectQueryResponse
 from index_query import getResponseFromQuery
-from router import detectQueryType
+from router import detectDocumentQuery
 import streamlit as st
 
 def sidebarOptions():
@@ -21,7 +21,7 @@ def generateResponse():
         if query == "":
                 return
         
-        queryRoute = detectQueryType(query)
+        queryRoute = detectDocumentQuery(query)
 
         if queryRoute:
                 st.session_state.response = projectQueryResponse(query, queryRoute, chatModel)

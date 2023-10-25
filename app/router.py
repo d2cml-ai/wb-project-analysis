@@ -1,22 +1,27 @@
 import re
 
-numbersPattern = re.compile(r"\d+")
+projectNumberPattern = re.compile(r"\D(P\d{6})\D")
+reportNumberPattern = re.compile(r"\D(PAD\d{3,4}|PP\d{3,4})\D")
+specialCasePattern = re.compile(r"\D(\d{5,6})\D")
+specialCases = [
+        '153807', '150976', '00000', '83270', '90483', '87051',
+        '126142', '120729', '126123', '126148', '177898'
+]
 
-def detectQueryType(query):
-        foundNumberStrings = numbersPattern.findall(query)
-        
-        if len(foundNumberStrings) == 0:
-                return False
-        
-        numberStringLengths = [len(number) for number in foundNumberStrings]
+def detectDocumentQuery(query):
+        paddedQuery = " " + query + " "
+        foundProjectIds = projectNumberPattern.findall(paddedQuery)
+        foundReportNumbers = reportNumberPattern.findall(paddedQuery)
+        foundSpecialCases = specialCasePattern.findall(paddedQuery)
 
-        try:
-                projectIdIndex = numberStringLengths.index(6)
-        except ValueError:
-                return False
-        
-        projectId = "P" + foundNumberStrings[projectIdIndex]
-        return projectId
+        if len(foundProjectIds) > 0:
+                return foundProjectIds[0]
+        if len(foundReportNumbers) > 0:
+                return foundReportNumbers[0]
+        if len(foundSpecialCases) > 0:
+                if foundSpecialCases[0] in specialCases:
+                        return foundSpecialCases[0]
+        return False
 
 # def main():
 #         userInput = ""
