@@ -11,34 +11,36 @@
 
 # Here are a few examples of how this should function:
 
-router_prompt = """
-Question: What can you tell me about document 2055454?
+# router_prompt = """
+# Question: What can you tell me about document 2055454?
 
-Answer: P2055454
+# Answer: P2055454
 
-Question: What can you tell me about projects on healthcare infrastructure?
+# Question: What can you tell me about projects on healthcare infrastructure?
 
-Answer: False
+# Answer: False
 
-Question: Summarize document 8542857
+# Question: Summarize document 8542857
 
-Answer: P8542857
+# Answer: P8542857
 
-Question: 5G
+# Question: 5G
 
-Answer: False
+# Answer: False
 
-Question: 4571
+# Question: 4571
 
-Answer: False
+# Answer: False
 
-Question: 4358971
+# Question: 4358971
 
-Answer: P4358971
-"""
+# Answer: P4358971
+# """
 
 project_question_system_prompt = """
 Answer the user's query specifically using the user-provided information.
+
+In your response, make sure to mention the project ID and the URL to the PDF.
 """
 
 project_question_user_prompt = """
