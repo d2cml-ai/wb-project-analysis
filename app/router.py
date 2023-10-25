@@ -1,30 +1,16 @@
-import re
+import intention_router as intention
 
-numbersPattern = re.compile(r"\d+")
 
-def detectQueryType(query):
-        foundNumberStrings = numbersPattern.findall(query)
-        
-        if len(foundNumberStrings) == 0:
-                return False
-        
-        numberStringLengths = [len(number) for number in foundNumberStrings]
+def detectQueryType(query: str):
+    info_dict, specific = intention.get_info(query)
+    if specific:
+        # Specific, filter pandas dataframe
+        return specific, info_dict
+    else:
+        return specific, {}
 
-        try:
-                projectIdIndex = numberStringLengths.index(6)
-        except ValueError:
-                return False
-        
-        projectId = "P" + foundNumberStrings[projectIdIndex]
-        return projectId
 
-# def main():
-#         userInput = ""
-#         while userInput != "exit":
-#                 userInput = input("Query: ")
-#                 routerResult = routQuery(userInput)
-#                 print(routerResult)
-                
+# a = input("insert query: ")
 
-# if __name__ == "__main__":
-#         main()
+
+# print(detectQueryType(a))

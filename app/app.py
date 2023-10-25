@@ -4,53 +4,60 @@ from index_query import getResponseFromQuery
 from router import detectQueryType
 import streamlit as st
 
+
 def sidebarOptions():
-        st.sidebar.title("Settings")
-        chatModel = st.sidebar.selectbox(
-                "Select Language Model: ",
-                ["gpt-3.5-turbo-16k", "gpt-4"]
-        )
-        numberOfResults = st.sidebar.number_input("Number of documents: ", 1, 10, 3)
-        return chatModel, numberOfResults
+    st.sidebar.title("Settings")
+    chatModel = st.sidebar.selectbox(
+        "Select Language Model: ", ["gpt-3.5-turbo-16k", "gpt-4"]
+    )
+    numberOfResults = st.sidebar.number_input("Number of documents: ", 1, 10, 3)
+    return chatModel, numberOfResults
+
 
 def generateResponse():
-        query = st.session_state.query
-        chatModel = st.session_state.chatModel
-        numberOfResults = st.session_state.numberOfResults
+    query = st.session_state.query
+    chatModel = st.session_state.chatModel
+    numberOfResults = st.session_state.numberOfResults
 
-        if query == "":
-                return
-        
-        queryRoute = detectQueryType(query)
+    if query == "":
+        return
 
-        if queryRoute:
-                st.session_state.response = projectQueryResponse(query, queryRoute, chatModel)
-        else:
-                st.session_state.response = getResponseFromQuery(query, numberOfResults, chatModel)
+    queryRoute, info = detectQueryType(query)
+    print(info, queryRoute)
+
+    if queryRoute:
+        st.session_state.response = projectQueryResponse(
+            info, query, queryRoute, chatModel
+        )
+    else:
+        st.session_state.response = getResponseFromQuery(
+            query, numberOfResults, chatModel
+        )
 
 
 def main():
-        if "response" not in st.session_state:
-                st.session_state.response = ""
-        
-        if "query" not in st.session_state:
-                st.session_state.query = ""
-        
-        st.write(st.session_state.query)
-        st.write(st.session_state.response)
+    if "response" not in st.session_state:
+        st.session_state.response = ""
 
-        st.title("WB Projects Analysis Tool")
-        st.session_state.chatModel, st.session_state.numberOfResults = sidebarOptions()
-        st.text_input(
-                "Ask your question here", 
-                key = "query",
-                placeholder="Are there any projects on 5G connectivity?",
-                on_change=generateResponse
-        )
+    if "query" not in st.session_state:
+        st.session_state.query = ""
+
+    st.write(st.session_state.query)
+    st.write(st.session_state.response)
+
+    st.title("WB Projects Analysis Tool")
+    st.session_state.chatModel, st.session_state.numberOfResults = sidebarOptions()
+    st.text_input(
+        "Ask your question here",
+        key="query",
+        placeholder="Are there any projects on 5G connectivity?",
+        on_change=generateResponse,
+    )
+
 
 if __name__ == "__main__":
-        main()
-        
+    main()
+
 
 # import os
 # import streamlit as st
@@ -75,7 +82,7 @@ if __name__ == "__main__":
 # def download_query():
 # 	st.sidebar.download_button(
 # 		'Download database',
-# 		csv, 
+# 		csv,
 # 		'query.csv'
 # 	)
 
@@ -104,9 +111,9 @@ if __name__ == "__main__":
 # 		st.session_state.query = {}
 # 	if 'request' not in st.session_state:
 # 		st.session_state.request = []
-        
+
 # 	return st.session_state.query, st.session_state.request
-        
+
 # def run_query(query, n_query):
 # 	response = Query(query, n_query)
 # 	response.query_consult()
@@ -149,18 +156,18 @@ if __name__ == "__main__":
 # 	# print(history.keys())
 # 	if query_request not in request:
 # 		request.append(query_request)
-        
+
 # 	if query_request not in list(history.keys()) and query_request != '':
 # 		info_cols = ['projectid', 'repnb', 'pdfurl', 'txturl']
 # 		show_col = db_[info_cols]
 # 		info = run_query(query_request, n_query)
 # 		data_with_metadata = info.data_context.merge(show_col, on = 'pdfurl', how='left')
-                 
+
 # 		# st.table(data_with_metadata[info_cols])
-                
+
 # 		history[query_request] = info.responses
 # 		data_with_metadata['gpt'] = info.responses
-                
+
 # 		# all_info = [
 # 		# 	get_metadata(i, data_with_metadata) for i in range(n_query)
 # 		# ]
@@ -168,8 +175,6 @@ if __name__ == "__main__":
 # 			get_metadata(i, data_with_metadata)
 # 		# print(history)
 # 		# get_metadata(0, data_with_metadata)
-                
-        
 
 
 # 	# Query
